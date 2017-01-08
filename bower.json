@@ -1,0 +1,15 @@
+{
+  "name": "gaymers-website",
+  "authors": [
+    "Thomas Baillie <thomas@thomasshaped.co.uk>"
+  ],
+  "license": "https://polymer.github.io/LICENSE.txt",
+  "dependencies": {
+    "app-route": "PolymerElements/app-route#^0.9.0",
+    "polymer": "Polymer/polymer#^1.6.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.0.0"
+  },
+  "private": true
+}

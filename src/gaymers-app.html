@@ -1,25 +1,21 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
 <dom-module id="gaymers-app">
   <template>
     <style>
       :host {
-        --app-primary-color: #4285f4;
-        --app-secondary-color: black;
+        --gaymers-primary: #4285f4;
+        --gaymers-primary-dark: #063E95;
 
         display: block;
+        min-height: 100vh;
+
+        background-color: var(--gaymers-primary-dark);
       }
     </style>
 
@@ -30,39 +26,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout fullbleed>
-      <!-- Drawer content -->
-      <app-drawer id="drawer">
-        <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
-          <a name="view3" href="/view3">View Three</a>
-        </iron-selector>
-      </app-drawer>
+    <!--<iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">-->
+      <!--<a name="home" href="/">Home</a>-->
+      <!--<a name="events" href="/events">Events</a>-->
+    <!--</iron-selector>-->
 
-      <!-- Main content -->
-      <app-header-layout has-scrolling-region>
-
-        <app-header condenses reveals effects="waterfall">
-          <app-toolbar>
-            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>My App</div>
-          </app-toolbar>
-        </app-header>
-
-        <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="view404"
-            role="main">
-          <my-view1 name="view1"></my-view1>
-          <my-view2 name="view2"></my-view2>
-          <my-view3 name="view3"></my-view3>
-          <my-view404 name="view404"></my-view404>
-        </iron-pages>
-      </app-header-layout>
-    </app-drawer-layout>
+    <iron-pages
+        selected="[[page]]"
+        attr-for-selected="name"
+        fallback-selection="404"
+        role="main">
+      <gaymers-home name="home"></gaymers-home>
+      <!--<gaymers-events name="events"></gaymers-events>-->
+      <gaymers-404 name="404"></gaymers-404>
+    </iron-pages>
   </template>
 
   <script>
@@ -82,16 +59,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
-
-        if (!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
+        this.page = page || 'home';
       },
 
       _pageChanged: function(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('gaymers-' + page + '.html');
+        var resolvedPageUrl = this.resolveUrl('pages/gaymers-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },
 

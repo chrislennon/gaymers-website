@@ -1,0 +1,48 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+
+
+<dom-module id="gaymers-home">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        min-height: 100vh;
+
+        padding: 10px;
+      }
+
+      h1 {
+        color: #FFFFFF;
+      }
+
+      #discord-button {
+        padding: 10px 15px;
+        background-color: #7289da;
+        color: #FFFFFF;
+        text-decoration: none;
+        border-radius: 3px;
+      }
+
+      #discord-button:hover {
+        
+      }
+    </style>
+
+    <gaymers-logo></gaymers-logo>
+
+    <h1>GAYMERS</h1>
+
+    <a id="discord-button"
+      target="_blank" 
+      href="https://discord.gg/Mb7ab33">
+      Join us on Discord
+    </a>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'gaymers-home',
+    });
+  </script>
+</dom-module>

@@ -8,7 +8,8 @@
     "app-route": "PolymerElements/app-route#^0.9.0",
     "polymer": "Polymer/polymer#^1.6.0",
     "iron-pages": "PolymerElements/iron-pages#^1.0.8",
-    "iron-selector": "PolymerElements/iron-selector#^1.5.2"
+    "iron-selector": "PolymerElements/iron-selector#^1.5.2",
+    "mojs": "^0.288.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

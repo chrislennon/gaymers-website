@@ -1,0 +1,93 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="gaymers-event-card">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: flex;
+        flex-flow: column;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 300px;
+        padding: 20px;
+        background-color: var(--gaymers-primary-light);
+      }
+
+      h3 {
+        margin-top: -10px;
+        margin-bottom: 10px;
+        color: #FFFFFF;
+      }
+
+      p {
+        color: #FFFFFF;
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 14px;
+      }
+
+      iron-image {
+        width: calc(100% + 40px);
+        position: relative;
+        top: -20px;
+        left: -20px;
+        height: 150px;
+        background-color: var(--gaymers-primary-dark);
+      }
+    </style>
+
+    <template is="dom-if" if="{{image}}">
+      <iron-image src="{{imageUrl}}" sizing="cover" preload fade></iron-image>
+    </template>
+
+    <template is="dom-if" if="{{title}}">
+      <h3>{{title}}</h3>
+    </template>
+
+    <template is="dom-if" if="{{description}}">
+      <p>{{description}}</p>
+    </template>
+
+    <span>{{start}}</span>
+    <span>{{end}}</span>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'gaymers-event-card',
+
+      properties: {
+        title: {
+          type: String,
+        },
+
+        start: {
+          type: String,
+        },
+
+        end: {
+          type: String,
+        },
+
+        description: {
+          type: String,
+        },
+
+        image: {
+          type: String,
+          observer: '_generateImageUrl'
+        },
+
+        imageUrl: {
+          type: String,
+        },
+      },
+
+      _generateImageUrl: function(image) {
+        return image;
+      }
+    });
+  </script>
+</dom-module>

@@ -1,7 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 
-<link rel="import" href="../elements/gaymers-logo.html">
+<link rel="import" href="../elements/gaymers-hero-section.html">
+<link rel="import" href="../elements/gaymers-events-section.html">
 
 <dom-module id="gaymers-home">
   <template>
@@ -12,72 +13,26 @@
 
         padding: 10px;
       }
-
-      section {
-        display: block;
-        margin: 0 auto;
-        width: 100%;
-        max-width: 900px;
-      }
-
-      #logo-container {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-
-      gaymers-logo {
-        width: 500px;
-        height: 500px;
-      }
-
-      h1 {
-        color: #FFFFFF;
-      }
-
-      #discord-button {
-        padding: 10px 15px 10px 0px;
-        background-color: #7289da;
-        color: #FFFFFF;
-        text-decoration: none;
-      }
-
-      #discord-button #icon {
-        width: 30px;
-        height: 100%;
-        background-image: url('../../images/Discord-Logo-White.svg');
-        background-repeat: no-repeat;
-        background-size: 25px;
-        background-position: 10px;
-      }
     </style>
 
-    <section>
-      <div id="logo-container">
-        <gaymers-logo></gaymers-logo>
-      </div>
-
-      <h1>GAYMERS</h1>
-      <a id="discord-button"
-        target="_blank" 
-        href="https://discord.gg/Mb7ab33">
-        <div id="icon"></div>
-        Join us on Discord
-      </a>
-    </section>
+    <gaymers-hero-section invite="{{invite}}"></gaymers-hero-section>
+    <gaymers-events-section events="{{events}}"></gaymers-events-section>
   </template>
 
   <script>
     Polymer({
       is: 'gaymers-home',
+
+      properties: {
+        invite: {
+          type: String,
+          value: 'https://discord.gg/Mb7ab33'
+        },
+
+        events: {
+          type: Array,
+        },
+      }
     });
   </script>
 </dom-module>

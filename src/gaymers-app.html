@@ -2,22 +2,40 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
+<link rel="import" href="./shared-styles.html">
 <link rel="import" href="./elements/gaymers-navigation.html">
+
+<link rel="import" href="./pages/gaymers-home.html">
 
 <dom-module id="gaymers-app">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
-        --gaymers-primary: #4285f4;
-        --gaymers-primary-dark: #063E95;
-
         display: block;
         min-height: 100vh;
 
-        background-color: var(--gaymers-primary-dark);
+        background-color: var(--gaymers-primary);
+      }
+
+      gaymers-navigation {
+        position: relative;
+        z-index: 10;
       }
     </style>
+
+    <iron-ajax id="events-request"
+      auto
+      url="https://qjeig9xi2f.execute-api.eu-west-1.amazonaws.com/dev/events"
+      handle-as="json"
+      last-response="{{events}}"></iron-ajax>
+
+    <iron-ajax id="discord-request"
+      auto
+      url="https://discordapp.com/api/guilds/123315443208421377/widget.json"
+      handle-as="json"
+      last-response="{{discord}}"></iron-ajax>
 
     <app-location route="{{route}}"></app-location>
     <app-route
@@ -27,6 +45,8 @@
         
     <gaymers-navigation 
       selected="[[page]]"
+      number-online="{{numberOnline}}"
+      invite="{{discord.instant_invite}}"
       role="navigation"></gaymers-navigation>
       
     <iron-pages
@@ -34,8 +54,12 @@
         attr-for-selected="name"
         fallback-selection="404"
         role="main">
-      <gaymers-home name="home"></gaymers-home>
-      <!--<gaymers-events name="events"></gaymers-events>-->
+      <gaymers-home 
+        name="home" 
+        invite="{{discord.instant_invite}}" 
+        events="{{events.events}}"></gaymers-home>
+      <gaymers-events name="events" 
+        events="{{events.events}}"></gaymers-events>
       <gaymers-404 name="404"></gaymers-404>
     </iron-pages>
   </template>
@@ -50,10 +74,26 @@
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
+
+        discord: {
+          type: Object,
+          notify: true,
+        },
+
+        numberOnline: {
+          type: String,
+          notify: true
+        },
+
+        events: {
+          type: Object,
+          notify: true,
+        },
       },
 
       observers: [
         '_routePageChanged(routeData.page)',
+        '_countOnline(discord.members)'
       ],
 
       _routePageChanged: function(page) {
@@ -68,6 +108,10 @@
 
       _showPage404: function() {
         this.page = '404';
+      },
+
+      _countOnline: function(members) {
+        this.numberOnline = members.length;
       },
     });
   </script>

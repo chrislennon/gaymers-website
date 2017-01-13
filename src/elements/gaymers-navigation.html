@@ -9,7 +9,7 @@
         display: block;
         height: 90px;
         color: #FFFFFF;
-        background-color: rgba(0, 0, 0, 0.25);
+        background-color: #081025;
       }
 
       #container {
@@ -19,7 +19,7 @@
         margin: 0 auto;
         display: flex;
         flex-flow: row nowrap;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
       }
 
@@ -78,12 +78,15 @@
         <a name="events" href="/events">Events</a>
         <a name="streams" href="/streams">Streams</a>
         <a name="about-us" href="/about-us">About Us</a>
+        <a name="about-us" id="join" href$="{{invite}}" target="_blank" >Join Us</a>
       </iron-selector>
 
-      <span id="online">
-        <div id="online-icon"></div>
-        647 online now
-      </span>
+      <template is="dom-if" if="{{numberOnline}}">
+        <span id="online">
+          <div id="online-icon"></div>
+          {{numberOnline}} online now
+        </span>
+      </template>
     </div>
     
   </template>
@@ -95,8 +98,19 @@
       properties: {
         selected: {
           type: String
-        }
-      }
+        },
+
+        invite: {
+          type: String,
+          value: 'https://discord.gg/Mb7ab33'
+        },
+
+        numberOnline: {
+          type: String,
+          value: null,
+          notify: true
+        },
+      },
     });
   </script>
 </dom-module>

@@ -9,7 +9,10 @@
     "polymer": "Polymer/polymer#^1.6.0",
     "iron-pages": "PolymerElements/iron-pages#^1.0.8",
     "iron-selector": "PolymerElements/iron-selector#^1.5.2",
-    "mojs": "^0.288.1"
+    "mojs": "^0.288.1",
+    "iron-image": "PolymerElements/iron-image#^1.2.5",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.4.3",
+    "moment": "^2.17.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

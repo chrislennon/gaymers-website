@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="./gaymers-event-card.html">
+
+<dom-module id="gaymers-events-section">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 900px;
+      }
+
+      h2 {
+        color: #FFFFFF;
+      }
+
+      #events {
+        display: flex;
+        flex-flow: row wrap;
+        position: relative;
+      }
+
+      gaymers-event-card {
+        flex-wrap: wrap;
+        flex-basis: calc(50% - 10px);
+        margin-bottom: 20px;
+      }
+
+      gaymers-event-card:nth-child(odd) {
+        margin-right: 10px;
+      }
+      gaymers-event-card:nth-child(even) {
+        margin-left: 10px;
+      }
+
+      #more {
+        display: block;
+        text-align: right;
+        color: #FFFFFF;
+        text-decoration: none;
+      }
+    </style>
+
+    <h2>Upcoming Events</h2>
+
+    <div id="events">
+      <template is="dom-repeat" items="{{events}}" as="event" sort="_sortEvents">
+        <gaymers-event-card
+          title="{{event.title}}"
+          start="{{event.start}}"
+          end="{{event.end}}"
+          image="test"
+          description="{{event.description}}"></gaymers-event-card>
+      </template>
+    </div>
+
+    <a href="/events" id="more">More ▶</a>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'gaymers-events-section',
+
+      properties: {
+        events: {
+          type: Array,
+        },
+      },
+
+      _sortEvents: function(a, b) {
+        dateA = new Date(a.start);
+        dateB = new Date(b.start);
+        return dateA - dateB;
+      },
+    });
+  </script>
+</dom-module>

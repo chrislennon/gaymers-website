@@ -54,17 +54,20 @@
             title="{{event.title}}"
             start="{{event.start}}"
             end="{{event.end}}"
-            image="test"
             description="{{event.description}}"></gaymers-event-card>
         </template>
 
-        <a href="/events" id="more">More ▶</a>
+        
       </template>
 
       <template is="dom-if" if="{{!_checkArrayLength(upcomingEvents)}}">
         <span id="no-events">No events scheduled, check back later!</span>
       </template>
     </div>
+
+    <template is="dom-if" if="{{_checkArrayLength(upcomingEvents)}}">
+      <a href="/events" id="more">More ▶</a>
+    </template>
   </template>
 
   <script>

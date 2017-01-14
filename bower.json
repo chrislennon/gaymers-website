@@ -12,7 +12,8 @@
     "mojs": "^0.288.1",
     "iron-image": "PolymerElements/iron-image#^1.2.5",
     "iron-ajax": "PolymerElements/iron-ajax#^1.4.3",
-    "moment": "^2.17.1"
+    "moment": "^2.17.1",
+    "moment-timezone": "^0.5.11"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

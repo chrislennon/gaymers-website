@@ -6,6 +6,7 @@
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./elements/gaymers-navigation.html">
+<link rel="import" href="./elements/moment-js.html">
 
 <link rel="import" href="./pages/gaymers-home.html">
 
@@ -58,9 +59,12 @@
         name="home" 
         invite="{{discord.instant_invite}}" 
         events="{{events.events}}"></gaymers-home>
-      <gaymers-events name="events" 
-        events="{{events.events}}"></gaymers-events>
-      <gaymers-404 name="404"></gaymers-404>
+      <gaymers-events
+        name="events" 
+        previous-events="{{previousEvents}}"
+        upcoming-events="{{upcomingEvents}}"></gaymers-events>
+      <gaymers-404
+        name="404"></gaymers-404>
     </iron-pages>
   </template>
 
@@ -89,11 +93,23 @@
           type: Object,
           notify: true,
         },
+
+        previousEvents: {
+          type: Array,
+          notify: true,
+        },
+
+        upcomingEvents: {
+          type: Array,
+          notify: true,
+        },
       },
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_countOnline(discord.members)'
+        '_countOnline(discord.members)',
+        '_generatePreviousEvents(events.events)',
+        '_generateUpcomingEvents(events.events)',
       ],
 
       _routePageChanged: function(page) {
@@ -112,6 +128,37 @@
 
       _countOnline: function(members) {
         this.numberOnline = members.length;
+      },
+
+      _generatePreviousEvents: function(events) {
+        var previousEvents = [];
+        var max = 3;
+
+        if (events.length < 4) {
+          max = events.length;
+        }
+
+        for (var i = 0; i < max; i++) {
+          var eventStart = new Date(events[i].start);
+          if (eventStart < Date.now()) {
+            previousEvents.push(events[i]);
+          }
+        };
+
+        this.previousEvents = previousEvents;
+      },
+
+      _generateUpcomingEvents: function(events) {
+        var upcomingEvents = [];
+
+        for (var i = 0; i < events.length; i++) {
+          var eventStart = new Date(events[i].start);
+          if (eventStart > Date.now()) {
+            upcomingEvents.push(events[i]);
+          }
+        };
+
+        this.upcomingEvents = upcomingEvents;
       },
     });
   </script>

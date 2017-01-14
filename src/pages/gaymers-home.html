@@ -15,8 +15,10 @@
       }
     </style>
 
-    <gaymers-hero-section invite="{{invite}}"></gaymers-hero-section>
-    <gaymers-events-section events="{{events}}"></gaymers-events-section>
+    <gaymers-hero-section 
+      invite="{{invite}}"></gaymers-hero-section>
+    <gaymers-events-section 
+      upcoming-events="{{events}}"></gaymers-events-section>
   </template>
 
   <script>
@@ -32,7 +34,7 @@
         events: {
           type: Array,
         },
-      }
+      },
     });
   </script>
 </dom-module>

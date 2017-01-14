@@ -46,7 +46,7 @@
     <h2>Upcoming Events</h2>
 
     <div id="events">
-      <template is="dom-repeat" items="{{events}}" as="event" sort="_sortEvents">
+      <template is="dom-repeat" items="{{upcomingEvents}}" as="event" sort="_sortEvents">
         <gaymers-event-card
           title="{{event.title}}"
           start="{{event.start}}"
@@ -64,15 +64,16 @@
       is: 'gaymers-events-section',
 
       properties: {
-        events: {
+        upcomingEvents: {
           type: Array,
+          notify: true,
         },
       },
 
       _sortEvents: function(a, b) {
         dateA = new Date(a.start);
         dateB = new Date(b.start);
-        return dateA - dateB;
+        return dateB - dateA;
       },
     });
   </script>

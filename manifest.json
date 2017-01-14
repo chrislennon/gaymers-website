@@ -2,9 +2,9 @@
   "name": "Gaymers",
   "short_name": "Gaymers",
   "start_url": "/?homescreen=1",
-  "display": "standalone",
+  "display": "browser",
   "theme_color": "#063E95",
-  "background_color": "#063E95",
+  "background_color": "#0A1531",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",

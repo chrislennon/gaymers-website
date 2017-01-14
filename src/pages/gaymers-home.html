@@ -16,8 +16,11 @@
 
     <gaymers-hero-section 
       invite="{{invite}}"></gaymers-hero-section>
-    <gaymers-events-section 
-      upcoming-events="{{events}}"></gaymers-events-section>
+    
+    <template is="dom-if" if="!{{events}}">
+      <gaymers-events-section 
+        upcoming-events="{{events}}"></gaymers-events-section>
+    </template>
   </template>
 
   <script>
@@ -32,6 +35,8 @@
 
         events: {
           type: Array,
+          value: null,
+          notify: true,
         },
       },
     });

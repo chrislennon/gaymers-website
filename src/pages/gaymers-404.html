@@ -1,20 +1,40 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
 
 <dom-module id="gaymers-404">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
-
+        height: 100%;
         padding: 10px 20px;
+      }
+
+      section {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 900px;
+        height: 100%;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 144px;
+        margin-bottom: 0;
+      }
+
+      a {
+
       }
     </style>
 
-    <!-- 
-      If deploying in a folder replace href="/" with the full path to your site.
-      Such as: href=="http://polymerelements.github.io/polymer-starter-kit"
-    -->
-    Oops you hit a 404. <a href="/">Head back to home.</a>
+    <section>
+      <h1>404 🙈</h1>
+      <a href="/">Go back home.</a>
+    </section>
   </template>
 
   <script>

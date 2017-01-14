@@ -11,6 +11,10 @@
         --gaymers-primary-dark: #081025;
         --gaymers-primary-light: #0E1F4A;
 
+        --gaymers-secondary: #FE054D;
+        --gaymers-secondary-dark: #d0013c;
+        --gaymers-secondary-light: #fe3971;
+
         --discord-purple: #7289DA;
         --discord-purple-dark: #4A67Cf;
 
@@ -30,7 +34,15 @@
       }
 
       a {
+        color: var(--gaymers-secondary);
+        text-decoration: none;
+        border-bottom: 1px solid var(--gaymers-secondary);
+        transition: color ease-out 150ms, border-bottom ease-out 150ms;
+      }
 
+      a:hover {
+        color: var(--gaymers-secondary-dark);
+        border-bottom: 1px solid var(--gaymers-secondary-dark);
       }
     </style>
   </template>

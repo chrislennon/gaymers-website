@@ -6,23 +6,21 @@
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./elements/gaymers-navigation.html">
-<link rel="import" href="./elements/moment-js.html">
-
-<link rel="import" href="./pages/gaymers-home.html">
+<link rel="import" href="./elements/gaymers-footer.html">
 
 <dom-module id="gaymers-app">
   <template>
     <style include="shared-styles">
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
         min-height: 100vh;
 
         background-color: var(--gaymers-primary);
       }
 
-      gaymers-navigation {
-        position: relative;
-        z-index: 10;
+      #content {
+        flex: 1;
       }
 
       iron-pages {
@@ -47,29 +45,33 @@
         route="{{route}}"
         pattern="/:page"
         data="{{routeData}}"></app-route>
-        
-    <gaymers-navigation 
-      selected="[[page]]"
-      number-online="{{numberOnline}}"
-      invite="{{discord.instant_invite}}"
-      role="navigation"></gaymers-navigation>
-      
-    <iron-pages
+
+    <div id="content">
+      <gaymers-navigation 
         selected="[[page]]"
-        attr-for-selected="name"
-        fallback-selection="404"
-        role="main">
-      <gaymers-home 
-        name="home" 
-        invite="{{discord.instant_invite}}" 
-        events="{{upcomingEvents}}"></gaymers-home>
-      <gaymers-events
-        name="events" 
-        previous-events="{{previousEvents}}"
-        upcoming-events="{{upcomingEvents}}"></gaymers-events>
-      <gaymers-404
-        name="404"></gaymers-404>
-    </iron-pages>
+        number-online="{{numberOnline}}"
+        invite="{{discord.instant_invite}}"
+        role="navigation"></gaymers-navigation>
+        
+      <iron-pages
+          selected="[[page]]"
+          attr-for-selected="name"
+          fallback-selection="404"
+          role="main">
+        <gaymers-home 
+          name="home" 
+          invite="{{discord.instant_invite}}" 
+          events="{{upcomingEvents}}"></gaymers-home>
+        <gaymers-events
+          name="events" 
+          previous-events="{{previousEvents}}"
+          upcoming-events="{{upcomingEvents}}"></gaymers-events>
+        <gaymers-404
+          name="404"></gaymers-404>
+      </iron-pages>
+    </div>
+
+    <gaymers-footer></gaymers-footer>
   </template>
 
   <script>

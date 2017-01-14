@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../shared-styles.html">
+<link rel="import" href="./moment-js.html">
 
 <dom-module id="gaymers-event-card">
   <template>
@@ -11,21 +12,8 @@
         box-sizing: border-box;
         width: 100%;
         min-width: 300px;
-        padding: 20px;
+        padding: 20px 20px 10px 20px;
         background-color: var(--gaymers-primary-light);
-      }
-
-      h3 {
-        margin-top: -10px;
-        margin-bottom: 10px;
-        color: #FFFFFF;
-      }
-
-      p {
-        color: #FFFFFF;
-        margin-top: 0;
-        margin-bottom: 0;
-        font-size: 14px;
       }
 
       iron-image {
@@ -36,22 +24,48 @@
         height: 150px;
         background-color: var(--gaymers-primary-dark);
       }
+
+      h3 {
+        margin-top: -10px;
+        margin-bottom: 0px;
+        color: #FFFFFF;
+      }
+
+      #times {
+        margin-bottom: 20px;
+      }
+
+      span {
+        color: #FFFFFF;
+        font-style: italic;
+        font-size: 14px;
+      }
+
+      p {
+        color: #FFFFFF;
+        margin-top: 0;
+        margin-bottom: 1.4em;
+        font-size: 14px;
+      }
     </style>
 
     <template is="dom-if" if="{{image}}">
       <iron-image src="{{imageUrl}}" sizing="cover" preload fade></iron-image>
     </template>
 
-    <template is="dom-if" if="{{title}}">
-      <h3>{{title}}</h3>
-    </template>
+    <h3>{{title}}</h3>
+
+    <div id="times">
+      <span id="start-time">{{startString}}</span>
+      <span id="separator"> - </span>
+      <span id="end-time">{{endString}}</span>
+    </div>
 
     <template is="dom-if" if="{{description}}">
-      <p>{{description}}</p>
+      <template is="dom-repeat" items="{{formattedDescription}}">
+        <p>{{item}}</p>
+      </template>
     </template>
-
-    <span>{{start}}</span>
-    <span>{{end}}</span>
   </template>
 
   <script>
@@ -63,7 +77,17 @@
           type: String,
         },
 
+        timezone: {
+          type: String,
+          observer: '_calculateTimes',
+          reflectToAttribute: true,
+        },
+
         start: {
+          type: String,
+        },
+
+        startString: {
           type: String,
         },
 
@@ -71,8 +95,17 @@
           type: String,
         },
 
+        endString: {
+          type: String,
+        },
+
         description: {
           type: String,
+          observer: '_splitDescription',
+        },
+
+        formattedDescription: {
+          type: Array,
         },
 
         image: {
@@ -85,9 +118,39 @@
         },
       },
 
+      ready: function() {
+        this.timezone = moment.tz.guess();
+      },
+
       _generateImageUrl: function(image) {
         return image;
-      }
+      },
+
+      _calculateTimes: function() {
+        this._generateStartTime();
+        this._generateEndTime();
+      },
+
+      _generateStartTime: function() {
+        this.startString = moment(this.start).tz(this.timezone).format('ha z');
+      },
+
+      _generateEndTime: function() {
+        this.endString = moment(this.end).tz(this.timezone).format('ha z');
+      },
+
+      _splitDescription: function() {
+        var array = this.description.split('\n');
+
+        for(i = 0; i < array.length; i++) {
+          if (array[i] == "") {
+            array.splice(i, 1);
+            i--;
+          }
+        }
+
+        this.formattedDescription = array;
+      },
     });
   </script>
 </dom-module>

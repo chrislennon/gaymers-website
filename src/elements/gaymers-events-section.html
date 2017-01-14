@@ -10,6 +10,7 @@
         margin: 0 auto;
         width: 100%;
         max-width: 900px;
+        padding: 50px 0;
       }
 
       h2 {
@@ -47,16 +48,23 @@
     <h2>Upcoming Events</h2>
 
     <div id="events">
-      <template is="dom-repeat" items="{{upcomingEvents}}" as="event" sort="_sortEvents">
-        <gaymers-event-card
-          title="{{event.title}}"
-          start="{{event.start}}"
-          end="{{event.end}}"
-          description="{{event.description}}"></gaymers-event-card>
+      <template is="dom-if" if="{{_checkArrayLength(upcomingEvents)}}">
+        <template is="dom-repeat" items="{{upcomingEvents}}" as="event" sort="_sortEvents">
+          <gaymers-event-card
+            title="{{event.title}}"
+            start="{{event.start}}"
+            end="{{event.end}}"
+            image="test"
+            description="{{event.description}}"></gaymers-event-card>
+        </template>
+
+        <a href="/events" id="more">More ▶</a>
+      </template>
+
+      <template is="dom-if" if="{{!_checkArrayLength(upcomingEvents)}}">
+        <span id="no-events">No events scheduled, check back later!</span>
       </template>
     </div>
-
-    <a href="/events" id="more">More ▶</a>
   </template>
 
   <script>
@@ -68,6 +76,14 @@
           type: Array,
           notify: true,
         },
+      },
+
+      _checkArrayLength: function(array) {
+        if (!array || array.length == 0) {
+          return false;
+        } else {
+          return true;
+        }
       },
 
       _sortEvents: function(a, b) {

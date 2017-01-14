@@ -14,6 +14,16 @@
         padding: 10px;
       }
 
+      h2 {
+        text-align: center;
+      }
+
+      #no-events {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+
       .events-container {
         display: flex;
         flex-flow: row wrap;
@@ -37,25 +47,33 @@
     <h2>Upcoming Events</h2>
 
     <div class="events-container">
-      <template is="dom-repeat" items="{{upcomingEvents}}" as="event" sort="_sortEvents">
-        <gaymers-event-card
-          title="{{event.title}}"
-          start="{{event.start}}"
-          end="{{event.end}}"
-          description="{{event.description}}"></gaymers-event-card>
+      <template is="dom-if" if="{{_checkArrayLength(upcomingEvents)}}">
+        <template is="dom-repeat" items="{{upcomingEvents}}" as="event" sort="_sortEvents">
+          <gaymers-event-card
+            title="{{event.title}}"
+            start="{{event.start}}"
+            end="{{event.end}}"
+            description="{{event.description}}"></gaymers-event-card>
+        </template>
+      </template>
+
+      <template is="dom-if" if="{{!_checkArrayLength(upcomingEvents)}}">
+        <span id="no-events">No events scheduled, check back later!</span>
       </template>
     </div>
 
-    <h2>Previous Events</h2>
-    <div class="events-container">
-      <template is="dom-repeat" items="{{previousEvents}}" as="event" sort="_sortEvents">
-        <gaymers-event-card
-          title="{{event.title}}"
-          start="{{event.start}}"
-          end="{{event.end}}"
-          description="{{event.description}}"></gaymers-event-card>
-      </template>
-    </div>
+    <template is="dom-if" if="{{_checkArrayLength(previousEvents)}}">
+      <h2>Previous Events</h2>
+      <div class="events-container">
+        <template is="dom-repeat" items="{{previousEvents}}" as="event" sort="_sortEvents">
+          <gaymers-event-card
+            title="{{event.title}}"
+            start="{{event.start}}"
+            end="{{event.end}}"
+            description="{{event.description}}"></gaymers-event-card>
+        </template>
+      </div>
+    </template>
 
   </template>
 
@@ -73,6 +91,14 @@
           type: Array,
           notify: true,
         },
+      },
+
+      _checkArrayLength: function(array) {
+        if (!array || array.length == 0) {
+          return false;
+        } else {
+          return true;
+        }
       },
 
       _sortEvents: function(a, b) {

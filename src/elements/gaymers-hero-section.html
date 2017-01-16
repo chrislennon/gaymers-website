@@ -10,10 +10,12 @@
         flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
-        margin: 0 auto;
+        box-sizing: border-box;
         width: 100%;
         max-width: 900px;
         min-height: calc(100vh - 90px);
+        margin: 0 auto;
+        padding: 0 10px;
       }
 
       gaymers-logo {
@@ -22,6 +24,16 @@
         height: 100%;
         max-height: 500px;
         margin-bottom: -10%;
+      }
+
+      @media (max-width: 720px) {
+        gaymers-logo {
+          width: 75%;
+          margin-top: 20px;
+          margin-right: auto;
+          margin-bottom: -20%;
+          margin-left: auto;
+        }
       }
 
       h1 {

@@ -1,0 +1,181 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="./shared-styles.html">
+<link rel="import" href="./elements/gaymers-navigation.html">
+<link rel="import" href="./elements/gaymers-footer.html">
+
+<dom-module id="gaymers-app">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+
+        background-color: var(--gaymers-primary);
+      }
+
+      #content {
+        flex: 1;
+      }
+
+      iron-pages {
+        min-height: 100%;
+      }
+    </style>
+
+    <iron-ajax id="events-request"
+      auto
+      url="https://api.gaymers.gg/events"
+      handle-as="json"
+      last-response="{{events}}"></iron-ajax>
+
+    <iron-ajax id="discord-request"
+      auto
+      url="https://discordapp.com/api/guilds/123315443208421377/widget.json"
+      handle-as="json"
+      last-response="{{discord}}"></iron-ajax>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"></app-route>
+
+    <div id="content">
+      <gaymers-navigation 
+        selected="[[page]]"
+        number-online="{{numberOnline}}"
+        invite="{{discord.instant_invite}}"
+        role="navigation"></gaymers-navigation>
+        
+      <iron-pages
+          selected="[[page]]"
+          attr-for-selected="name"
+          fallback-selection="404"
+          role="main">
+        <gaymers-home 
+          name="home" 
+          invite="{{discord.instant_invite}}" 
+          events="{{upcomingEvents}}"></gaymers-home>
+        <gaymers-events
+          name="events" 
+          previous-events="{{previousEvents}}"
+          upcoming-events="{{upcomingEvents}}"></gaymers-events>
+        <gaymers-404
+          name="404"></gaymers-404>
+      </iron-pages>
+    </div>
+
+    <gaymers-footer></gaymers-footer>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'gaymers-app',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+
+        discord: {
+          type: Object,
+          notify: true,
+        },
+
+        numberOnline: {
+          type: String,
+          notify: true
+        },
+
+        events: {
+          type: Object,
+          notify: true,
+        },
+
+        previousEvents: {
+          type: Array,
+          notify: true,
+        },
+
+        upcomingEvents: {
+          type: Array,
+          notify: true,
+        },
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+        '_countOnline(discord.members)',
+        '_generatePreviousEvents(events.events)',
+        '_generateUpcomingEvents(events.events)',
+      ],
+
+      _routePageChanged: function(page) {
+        this.page = page || 'home';
+      },
+
+      _pageChanged: function(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('pages/gaymers-' + page + '.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+
+      _showPage404: function() {
+        this.page = '404';
+      },
+
+      _countOnline: function(members) {
+        this.numberOnline = members.length;
+      },
+
+      _generatePreviousEvents: function(events) {
+        if (!events) {
+          this.previousEvents = null;
+          return;
+        }
+
+        var previousEvents = [];
+        var max = 3;
+
+        if (events.length < 4) {
+          max = events.length;
+        }
+
+        for (var i = 0; i < max; i++) {
+          var eventStart = new Date(events[i].start);
+          if (eventStart < Date.now()) {
+            previousEvents.push(events[i]);
+          }
+        };
+
+        this.previousEvents = previousEvents;
+      },
+
+      _generateUpcomingEvents: function(events) {
+        if (!events) {
+          this.upcomingEvents = null;
+          return;
+        }
+
+        var upcomingEvents = [];
+
+        for (var i = 0; i < events.length; i++) {
+          var eventStart = new Date(events[i].start);
+          if (eventStart > Date.now()) {
+            upcomingEvents.push(events[i]);
+          }
+        };
+
+        this.upcomingEvents = upcomingEvents;
+      },
+    });
+  </script>
+</dom-module>

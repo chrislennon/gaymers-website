@@ -1,0 +1,44 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+
+<link rel="import" href="../elements/gaymers-hero-section.html">
+<link rel="import" href="../elements/gaymers-events-section.html">
+
+<dom-module id="gaymers-home">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        box-sizing: border-box;
+        min-height: calc(100vh - 90px);
+      }
+    </style>
+
+    <gaymers-hero-section 
+      invite="{{invite}}"></gaymers-hero-section>
+    
+    <template is="dom-if" if="!{{events}}">
+      <gaymers-events-section 
+        upcoming-events="{{events}}"></gaymers-events-section>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'gaymers-home',
+
+      properties: {
+        invite: {
+          type: String,
+          value: 'https://discord.gg/Mb7ab33'
+        },
+
+        events: {
+          type: Array,
+          value: null,
+          notify: true,
+        },
+      },
+    });
+  </script>
+</dom-module>

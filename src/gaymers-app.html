@@ -133,6 +133,11 @@
       },
 
       _countOnline: function(members) {
+        if (!members) {
+          this.numberOnline = null;
+          return;
+        }
+
         this.numberOnline = members.length;
       },
 

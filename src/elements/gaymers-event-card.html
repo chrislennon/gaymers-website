@@ -143,6 +143,7 @@
         var array = this.description.split('\n');
 
         for(i = 0; i < array.length; i++) {
+          // Removes double returns
           if (array[i] == "") {
             array.splice(i, 1);
             i--;

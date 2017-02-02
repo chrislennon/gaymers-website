@@ -132,11 +132,11 @@
       },
 
       _generateStartTime: function() {
-        this.startString = moment(this.start).tz(this.timezone).format('ha z');
+        this.startString = moment(this.start).tz(this.timezone).format('ddd MMM Do, ha z');
       },
 
       _generateEndTime: function() {
-        this.endString = moment(this.end).tz(this.timezone).format('ha z');
+        this.endString = moment(this.end).tz(this.timezone).format('ddd MMM Do, ha z');
       },
 
       _splitDescription: function() {

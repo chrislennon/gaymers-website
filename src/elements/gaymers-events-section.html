@@ -37,6 +37,19 @@
         margin-left: 10px;
       }
 
+      @media (max-width: 720px) {
+        gaymers-event-card {
+          flex-basis: 100%;
+        }
+
+        gaymers-event-card:nth-child(odd) {
+          margin-right: 0;
+        }
+        gaymers-event-card:nth-child(even) {
+          margin-left: 0;
+        }
+      }
+
       #more {
         display: block;
         text-align: right;

@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="./shared-styles.html">
-<link rel="import" href="./elements/gaymers-navigation.html">
+<link rel="import" href="./elements/gaymers-header.html">
 <link rel="import" href="./elements/gaymers-footer.html">
 
 <dom-module id="gaymers-app">
@@ -47,11 +47,9 @@
         data="{{routeData}}"></app-route>
 
     <div id="content">
-      <gaymers-navigation 
-        selected="[[page]]"
+      <gaymers-header 
         number-online="{{numberOnline}}"
-        invite="{{discord.instant_invite}}"
-        role="navigation"></gaymers-navigation>
+        invite="{{discord.instant_invite}}"></gaymers-header>
         
       <iron-pages
           selected="[[page]]"

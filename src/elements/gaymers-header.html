@@ -42,12 +42,20 @@
         }
       }
 
-      iron-icon {
+      #icon-container {
+        display: none;
         padding: 20px;
+      }
+
+      iron-icon {
         display: none;
       }
 
       @media (max-width: 900px) {
+        #icon-container {
+          display: block;
+        }
+
         iron-icon {
           display: block;
         }
@@ -55,9 +63,9 @@
     </style>
 
     <div id="container">
-      <iron-icon
-        icon="icons:menu"
-        on-tap="toggleDrawer"></iron-icon>
+      <div id="icon-container" on-tap="toggleDrawer">
+        <iron-icon icon="icons:menu"></iron-icon>
+      </div>
 
       <a name="home" href="/" id="brand">GAYMERS</a>
 

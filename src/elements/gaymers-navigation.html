@@ -14,12 +14,16 @@
       @media (max-width: 900px) {
         :host {
           width: 0;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 10;
         }
       }
 
       :host #container {
         position: relative;
-        z-index: 3;
+        z-index: 15;
         height: 100%;
         width: 100%;
         max-width: 900px;
@@ -157,7 +161,7 @@
           right: 0;
           bottom: 0;
           left: 0;
-          z-index: 2;
+          z-index: 10;
           background-color: #000000;
           opacity: 0.7;
         }

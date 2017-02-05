@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="./gaymers-logo.html">
+<link rel="import" href="./discord-button.html">
 
 <dom-module id="gaymers-hero-section">
   <template>
@@ -47,48 +48,24 @@
         text-align: center;
       }
 
-      #discord-button {
-        position: relative;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 15px 10px 50px;
-        background-color: var(--discord-purple);
-        color: #FFFFFF;
+      a {
         text-decoration: none;
         border-bottom: none;
-        transition: all ease-out 150ms;
       }
 
-      #discord-button:hover {
-        background-color: var(--discord-purple-dark);
-      }
-
-      #discord-button #icon {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 40px;
-        background-image: url('../../images/Discord-Logo-White.svg');
-        background-repeat: no-repeat;
-        background-size: 25px;
-        background-position: center;
-        background-color: rgba(0, 0, 0, 0.25);
+      a:hover {
+        text-decoration: none;
+        border-bottom: none;
       }
     </style>
 
     <gaymers-logo></gaymers-logo>
 
     <h1>Welcome to Gaymers</h1>
-  <p>A Discord server for LGBTQ+ gamers.<br>We’re a welcoming community with colourful members from all over the world.</p>
+    <p>A Discord server for LGBTQ+ gamers.<br>We’re a welcoming community with colourful members from all over the world.</p>
 
-    <a id="discord-button"
-      target="_blank" 
-      href$="{{invite}}">
-      <div id="icon"></div>
-      Join us on Discord
+    <a target="_blank" href$="{{invite}}">
+      <discord-button>Join us on Discord</discord-button>
     </a>
   </template>
 

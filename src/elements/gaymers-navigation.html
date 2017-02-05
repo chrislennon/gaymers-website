@@ -38,6 +38,7 @@
       @media (max-width: 900px) {
         :host #container {
           position: absolute;
+          flex-flow: column nowrap;
           height: 100vh;
           width: 300px;
           top: 0;
@@ -71,7 +72,6 @@
 
       @media (max-width: 900px) {
         nav {
-          height: 100%;
           width: 100%;
           flex-flow: column nowrap;
           justify-content: flex-start;
@@ -91,6 +91,7 @@
       }
       
       nav a:hover {
+        color: #FFFFFF;
         border-bottom: 1px solid #FFF;
       }
 
@@ -146,6 +147,34 @@
         background-color: #7ED321;
       }
 
+      #sign-in-button {
+        position: relative;
+        box-sizing: border-box;
+        margin-left: 30px;
+        padding: 10px 15px;
+        background-color: var(--gaymers-secondary);
+        color: #FFFFFF;
+        text-align: center;
+        text-decoration: none;
+        border-bottom: none;
+        transition: all ease-out 150ms;
+      }
+
+      #sign-in-button:hover {
+        background-color: var(--gaymers-secondary-dark);
+      }
+
+      @media (max-width: 900px) {
+        #sign-in-button {
+          display: block;
+          margin-top: auto;
+          margin-right: 30px;
+          margin-bottom: 30px;
+          margin-left: 30px;
+          width: calc(100% - 60px);
+        }
+      }
+
       :host #scrim {
         opacity: 0;
         transition: opacity 150ms ease-out;
@@ -170,11 +199,11 @@
 
     <div id="container">
       <nav role="navigation">
-        <a name="home" href="/" id="brand">GAYMERS</a>
-        <a name="events" href="/events">Events</a>
-        <a name="streams" href="/streams">Streams</a>
-        <a name="about-us" href="/about-us">About Us</a>
-        <a id="join" href$="{{invite}}" target="_blank">Join Us</a>
+        <a name="home" href="/" id="brand" on-tap="toggleDrawer">GAYMERS</a>
+        <a name="events" href="/events" on-tap="toggleDrawer">Events</a>
+        <a name="streams" href="/streams" on-tap="toggleDrawer">Streams</a>
+        <a name="about-us" href="/about-us" on-tap="toggleDrawer">About Us</a>
+        <a id="join" href$="{{invite}}" target="_blank" on-tap="toggleDrawer">Join Us</a>
       </nav>
 
       <template is="dom-if" if="[[numberOnline]]">
@@ -184,7 +213,7 @@
         </span>
       </template>
 
-      <a id="sign-in" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
+      <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
     </div>
 
     <div id="scrim" on-tap="toggleDrawer"></div>

@@ -1,0 +1,104 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="./uri-js.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="discord-oauth">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <iron-localstorage 
+      id="localstorage"
+      name="gaymers-storage"
+      value="{{tokens}}"
+      on-iron-localstorage-load-empty="_initializeDefaultTokens"
+    ></iron-localstorage>
+
+    <iron-ajax id="discord-request"
+      auto
+      url="{{requestUrl}}"
+      handle-as="json"
+      last-response="{{events}}"
+    ></iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'discord-oauth',
+
+      properties: {
+        /**
+          * Token object synced to localstorage.
+          */
+        tokens: {
+          type: Object,
+          reflectToAttribute: true
+        },
+
+        /**
+          * The iron-ajax request URL.
+          */
+        requestUrl: {
+          type: String,
+        },
+
+        signedIn: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      /**
+        * Attached event checkes for any URL parameters to see if we've been
+        * redirected from an OAuth flow.
+        */
+      attached: function() {
+        console.log('Tokens', this.tokens);
+        this._getURLParams();
+      },
+
+      /**
+        * Initialises a set of default token keys if none found in localstorage.
+        */
+      _initializeDefaultTokens: function() {
+        this.tokens = {
+          auth: '',
+          refresh: ''
+        }
+      },
+
+      /**
+        * Gets URL params
+        */
+      _getURLParams: function() {
+        var url = new URI;
+
+        if (!url.query()) {
+          console.log('No params');
+          return;
+        }
+
+        var params = url.search(true);
+
+        if (params.authorization_token && params.refresh_token) {
+          this._saveTokens(params.authorization_token, params.refresh_token);
+        }
+      },
+
+      /**
+        * Saves tokens to local storage.
+        *
+        * @param {string} authToken The Discord auth token
+        * @param {string} refreshToken The Discord refresh token
+        */
+      _saveTokens: function(authToken, refreshToken) {
+        this.set('tokens.auth', authToken);
+        this.set('tokens.refresh', refreshToken);
+      }
+    });
+  </script>
+</dom-module>

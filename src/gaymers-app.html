@@ -7,6 +7,7 @@
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./elements/gaymers-header.html">
 <link rel="import" href="./elements/gaymers-footer.html">
+<link rel="import" href="./elements/discord-oauth.html">
 
 <dom-module id="gaymers-app">
   <template>
@@ -27,6 +28,8 @@
         min-height: 100%;
       }
     </style>
+
+    <discord-oauth></discord-oauth>
 
     <iron-ajax id="events-request"
       auto

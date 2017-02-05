@@ -174,7 +174,7 @@
         <a name="events" href="/events">Events</a>
         <a name="streams" href="/streams">Streams</a>
         <a name="about-us" href="/about-us">About Us</a>
-        <a name="about-us" id="join" href$="{{invite}}" target="_blank" >Join Us</a>
+        <a id="join" href$="{{invite}}" target="_blank">Join Us</a>
       </nav>
 
       <template is="dom-if" if="[[numberOnline]]">
@@ -183,6 +183,8 @@
           [[numberOnline]] online now
         </span>
       </template>
+
+      <a id="sign-in" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
     </div>
 
     <div id="scrim" on-tap="toggleDrawer"></div>
@@ -197,6 +199,7 @@
           type: String,
           value: 'https://discord.gg/Mb7ab33'
         },
+        
         open: {
           type: Boolean,
           reflectToAttribute: true,

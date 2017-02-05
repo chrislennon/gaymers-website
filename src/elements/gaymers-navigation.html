@@ -199,11 +199,9 @@
 
     <div id="container">
       <nav role="navigation">
-        <a name="home" href="/" id="brand" on-tap="toggleDrawer">GAYMERS</a>
-        <a name="events" href="/events" on-tap="toggleDrawer">Events</a>
-        <a name="streams" href="/streams" on-tap="toggleDrawer">Streams</a>
-        <a name="about-us" href="/about-us" on-tap="toggleDrawer">About Us</a>
-        <a id="join" href$="{{invite}}" target="_blank" on-tap="toggleDrawer">Join Us</a>
+        <a name="home" href="/" id="brand" on-tap="closeDrawer">GAYMERS</a>
+        <a name="events" href="/events" on-tap="closeDrawer">Events</a>
+        <a id="join" href$="{{invite}}" target="_blank" on-tap="closeDrawer">Join Us</a>
       </nav>
 
       <template is="dom-if" if="[[numberOnline]]">
@@ -216,7 +214,7 @@
       <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
     </div>
 
-    <div id="scrim" on-tap="toggleDrawer"></div>
+    <div id="scrim" on-tap="closeDrawer"></div>
   </template>
 
   <script>
@@ -236,8 +234,8 @@
         },
       },
 
-      toggleDrawer: function() {
-        this.open = !this.open;
+      closeDrawer: function() {
+        this.open = false;
       }
     });
   </script>

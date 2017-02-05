@@ -63,7 +63,7 @@
     </style>
 
     <div id="container">
-      <div id="icon-container" on-tap="toggleDrawer">
+      <div id="icon-container" on-tap="closeDrawer">
         <iron-icon icon="icons:menu"></iron-icon>
       </div>
 
@@ -94,8 +94,8 @@
         },
       },
 
-      toggleDrawer: function() {
-        this.$.nav.toggleDrawer();
+      closeDrawer: function() {
+        this.$.nav.closeDrawer();
       }
     });
   </script>

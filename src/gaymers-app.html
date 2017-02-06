@@ -51,7 +51,6 @@
 
     <div id="content">
       <gaymers-header 
-        number-online="{{numberOnline}}"
         invite="{{discord.instant_invite}}"></gaymers-header>
         
       <iron-pages
@@ -62,6 +61,7 @@
         <gaymers-home 
           name="home" 
           invite="{{discord.instant_invite}}" 
+          members="{{discord.members}}"
           events="{{upcomingEvents}}"></gaymers-home>
         <gaymers-events
           name="events" 
@@ -91,11 +91,6 @@
           notify: true,
         },
 
-        numberOnline: {
-          type: String,
-          notify: true
-        },
-
         events: {
           type: Object,
           notify: true,
@@ -114,7 +109,6 @@
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_countOnline(discord.members)',
         '_generatePreviousEvents(events.events)',
         '_generateUpcomingEvents(events.events)',
       ],
@@ -131,15 +125,6 @@
 
       _showPage404: function() {
         this.page = '404';
-      },
-
-      _countOnline: function(members) {
-        if (!members) {
-          this.numberOnline = null;
-          return;
-        }
-
-        this.numberOnline = members.length;
       },
 
       _generatePreviousEvents: function(events) {

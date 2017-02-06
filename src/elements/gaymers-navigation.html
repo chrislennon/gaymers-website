@@ -125,32 +125,10 @@
         }
       }
 
-      #online {
-        margin-left: auto;
-        font-size: 14px;
-        font-weight: normal;
-        color: rgba(255, 255, 255, 1);
-      }
-
-      @media (max-width: 900px) {
-        #online {
-          display: none;
-        }
-      }
-
-      #online-icon {
-        display: inline-block;
-        height: 6px;
-        width: 6px;
-        margin-bottom: 2px;
-        border-radius: 50%;
-        background-color: #7ED321;
-      }
-
       #sign-in-button {
         position: relative;
         box-sizing: border-box;
-        margin-left: 30px;
+        margin-left: auto;
         padding: 10px 15px;
         background-color: var(--gaymers-secondary);
         color: #FFFFFF;
@@ -203,13 +181,6 @@
         <a name="events" href="/events" on-tap="closeDrawer">Events</a>
         <a id="join" href$="{{invite}}" target="_blank" on-tap="closeDrawer">Join Us</a>
       </nav>
-
-      <template is="dom-if" if="[[numberOnline]]">
-        <span id="online">
-          <div id="online-icon"></div>
-          [[numberOnline]] online now
-        </span>
-      </template>
 
       <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
     </div>

@@ -18,8 +18,7 @@
       on-iron-localstorage-load-empty="_initializeDefaultTokens"
     ></iron-localstorage>
 
-    <iron-ajax id="discord-request"
-      auto
+    <iron-ajax id="ajax"
       url="{{requestUrl}}"
       handle-as="json"
       last-response="{{events}}"
@@ -46,6 +45,9 @@
           type: String,
         },
 
+        /**
+          * If the user is signed in.
+          */
         signedIn: {
           type: Boolean,
           value: false
@@ -98,7 +100,18 @@
       _saveTokens: function(authToken, refreshToken) {
         this.set('tokens.auth', authToken);
         this.set('tokens.refresh', refreshToken);
-      }
+      },
+
+      /**
+        * Refreshes an expired auth token.
+        *
+        * @param {string} refreshToken The Discord refresh token
+        */
+      _refreshTokens: function(refreshToken) {
+        console.log('Refreshing token');
+        this.set('tokens.auth', authToken);
+        this.set('tokens.refresh', refreshToken);
+      },
     });
   </script>
 </dom-module>

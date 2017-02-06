@@ -125,10 +125,13 @@
         }
       }
 
+      #right-container {
+        margin-left: auto;
+      }
+
       #sign-in-button {
         position: relative;
         box-sizing: border-box;
-        margin-left: auto;
         padding: 10px 15px;
         background-color: var(--gaymers-secondary);
         color: #FFFFFF;
@@ -182,7 +185,9 @@
         <a id="join" href$="{{invite}}" target="_blank" on-tap="closeDrawer">Join Us</a>
       </nav>
 
-      <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
+      <div id="right-container">
+        <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
+      </div>
     </div>
 
     <div id="scrim" on-tap="closeDrawer"></div>

@@ -71,7 +71,10 @@
 
       <gaymers-navigation
         id="nav"
-        invite="[[invite]]"></gaymers-navigation>
+        signed-in="[[signedIn]]"
+        user="[[user]]"
+        invite="[[invite]]"
+      ></gaymers-navigation>
     </div>
     
   </template>
@@ -84,6 +87,14 @@
         invite: {
           type: String,
           value: 'https://discord.gg/Mb7ab33'
+        },
+
+        signedIn: {
+          type: Boolean,
+        },
+
+        user: {
+          type: Object,
         },
       },
 

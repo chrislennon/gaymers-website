@@ -29,7 +29,10 @@
       }
     </style>
 
-    <discord-oauth></discord-oauth>
+    <discord-oauth
+      signed-in="{{signedIn}}"
+      user="{{user}}"
+    ></discord-oauth>
 
     <iron-ajax id="events-request"
       auto
@@ -51,7 +54,10 @@
 
     <div id="content">
       <gaymers-header 
-        invite="{{discord.instant_invite}}"></gaymers-header>
+        signed-in="{{signedIn}}"
+        user="{{user}}"
+        invite="{{discord.instant_invite}}"
+      ></gaymers-header>
         
       <iron-pages
           selected="[[page]]"

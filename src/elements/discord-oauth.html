@@ -30,6 +30,7 @@
       method="GET"
       handle-as="json"
       on-response="_getProfileDataResponse"
+      on-error="_getProfileDataError"
     ></iron-ajax>
   </template>
 
@@ -43,7 +44,7 @@
           */
         baseUrl: {
           type: String,
-          value: 'https://qjeig9xi2f.execute-api.eu-west-1.amazonaws.com/dev', //'https://api.gaymers.gg',
+          value: 'https://api.gaymers.gg',
         },
 
         /**
@@ -58,8 +59,17 @@
           */
         signedIn: {
           type: Boolean,
-          value: false
-        }
+          value: false,
+          reflectToAttribute: true,
+        },
+
+        /**
+          * The returned user object
+          */
+        user: {
+          type: Object,
+          reflectToAttribute: true,
+        },
       },
 
       /**
@@ -68,6 +78,12 @@
         */
       attached: function() {
         console.log('Tokens', this.tokens);
+
+        // Attempt a sign in
+        if (this.tokens.auth) {
+          this.signedIn = true;
+          this._getProfileData();
+        }
         this._getURLParams();
       },
 
@@ -79,6 +95,14 @@
           auth: '',
           refresh: ''
         }
+      },
+
+      /**
+        * Clears tokens and signs out the user.
+        */
+      signOut: function() {
+        this._initializeDefaultTokens(); // Clear tokens
+        this.signedIn = false;
       },
 
       /**
@@ -96,6 +120,7 @@
 
         if (params.authorization_token && params.refresh_token) {
           this._saveTokens(params.authorization_token, params.refresh_token);
+          this.signedIn = true;
         }
       },
 
@@ -122,7 +147,6 @@
       },
 
       _refreshTokensResponse: function(e) {
-        console.log(e.detail.response.authorization_token);
         this._saveTokens(e.detail.response.authorization_token, e.detail.response.refresh_token);
       },
 
@@ -135,13 +159,19 @@
         var ajax = this.$['get-profile-data'];
         ajax.url = this.baseUrl + '/user';
         ajax.headers['Authorization'] = this.tokens.auth;
-        console.log(ajax.headers);
-
         ajax.generateRequest();
       },
 
       _getProfileDataResponse: function(e) {
-        console.log(e.detail.response);
+        console.log(e.detail.request);
+        this.user = e.detail.response;
+        console.log(this.user);
+      },
+
+      _getProfileDataError: function(e) {
+        console.log('Error getting data.');
+        this._refreshTokens();
+        this._getProfileData();
       },
     });
   </script>

@@ -186,7 +186,13 @@
       </nav>
 
       <div id="right-container">
-        <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
+        <template is="dom-if" if="[[!signedIn]]">
+          <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
+        </template>
+
+        <template is="dom-if" if="[[signedIn]]">
+          <span>Hello, {{user.username}}</span>
+        </template>
       </div>
     </div>
 
@@ -201,6 +207,14 @@
         invite: {
           type: String,
           value: 'https://discord.gg/Mb7ab33'
+        },
+
+        signedIn: {
+          type: Boolean
+        },
+
+        user: {
+          type: Object
         },
         
         open: {

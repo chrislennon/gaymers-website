@@ -63,18 +63,28 @@
           selected="[[page]]"
           attr-for-selected="name"
           fallback-selection="404"
-          role="main">
+          role="main"
+      >
         <gaymers-home 
           name="home" 
           invite="{{discord.instant_invite}}" 
           members="{{discord.members}}"
-          events="{{upcomingEvents}}"></gaymers-home>
+          events="{{upcomingEvents}}"
+        ></gaymers-home>
+
         <gaymers-events
           name="events" 
           previous-events="{{previousEvents}}"
-          upcoming-events="{{upcomingEvents}}"></gaymers-events>
+          upcoming-events="{{upcomingEvents}}"
+        ></gaymers-events>
+
+        <gaymers-user
+          name="user" 
+        ></gaymers-user>
+
         <gaymers-404
-          name="404"></gaymers-404>
+          name="404"
+        ></gaymers-404>
       </iron-pages>
     </div>
 

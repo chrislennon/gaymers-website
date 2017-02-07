@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../shared-styles.html">
 
 <dom-module id="gaymers-navigation">
@@ -156,6 +157,24 @@
         }
       }
 
+      #profile-link {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        align-items: center;
+        text-decoration: none;
+        color: #FFF;
+        border-bottom: none;
+      }
+
+      #profile-link iron-image {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-left: 10px;
+        background-color: var(--gaymers-primary-dark);
+      }
+
       :host #scrim {
         opacity: 0;
         transition: opacity 150ms ease-out;
@@ -190,8 +209,11 @@
           <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
         </template>
 
-        <template is="dom-if" if="[[signedIn]]">
-          <span>Hello, {{user.username}}</span>
+        <template is="dom-if" if="[[user.username]]">
+          <a href="/user" id="profile-link">
+            <span>Hello, [[user.username]]</span>
+            <iron-image sizing="cover" src="[[user.avatarUrl]]" preload></iron-image>
+          </a>
         </template>
       </div>
     </div>
@@ -208,25 +230,22 @@
           type: String,
           value: 'https://discord.gg/Mb7ab33'
         },
-
-        signedIn: {
-          type: Boolean
-        },
-
-        user: {
-          type: Object
-        },
         
         open: {
           type: Boolean,
           reflectToAttribute: true,
           value: false
         },
+
+        user: {
+          type: Object,
+          notify: true,
+        }
       },
 
       closeDrawer: function() {
         this.open = false;
-      }
+      },
     });
   </script>
 </dom-module>

@@ -61,6 +61,7 @@
           type: Boolean,
           value: false,
           reflectToAttribute: true,
+          notify: true,
         },
 
         /**
@@ -68,7 +69,9 @@
           */
         user: {
           type: Object,
+          notify: true,
           reflectToAttribute: true,
+          observer: '_computeAvatarUrl'
         },
       },
 
@@ -173,6 +176,14 @@
         this._refreshTokens();
         this._getProfileData();
       },
+
+      _computeAvatarUrl: function(user) {
+        if (user.avatar) {
+          console.log(user.avatar);
+          this.user.avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.userid + '/' + user.avatar + '.jpg';
+          console.log(user.avatarUrl);
+        }
+      }
     });
   </script>
 </dom-module>

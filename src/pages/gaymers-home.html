@@ -2,6 +2,7 @@
 <link rel="import" href="../shared-styles.html">
 
 <link rel="import" href="../elements/gaymers-hero-section.html">
+<link rel="import" href="../elements/gaymers-members-section.html">
 <link rel="import" href="../elements/gaymers-events-section.html">
 
 <dom-module id="gaymers-home">
@@ -17,6 +18,9 @@
     <gaymers-hero-section 
       invite="{{invite}}"></gaymers-hero-section>
     
+    <gaymers-members-section 
+      members="{{members}}"></gaymers-members-section>
+    
     <template is="dom-if" if="!{{events}}">
       <gaymers-events-section 
         upcoming-events="{{events}}"></gaymers-events-section>
@@ -31,6 +35,11 @@
         invite: {
           type: String,
           value: 'https://discord.gg/Mb7ab33'
+        },
+
+        members: {
+          type: Array,
+          notify: true
         },
 
         events: {

@@ -37,6 +37,19 @@
         margin-left: 10px;
       }
 
+      @media (max-width: 720px) {
+        gaymers-event-card {
+          flex-basis: 100%;
+        }
+
+        gaymers-event-card:nth-child(odd) {
+          margin-right: 0;
+        }
+        gaymers-event-card:nth-child(even) {
+          margin-left: 0;
+        }
+      }
+
       #more {
         display: block;
         text-align: right;
@@ -57,8 +70,6 @@
             end="{{event.end}}"
             description="{{event.description}}"></gaymers-event-card>
         </template>
-
-        
       </template>
 
       <template is="dom-if" if="{{!_checkArrayLength(upcomingEvents)}}">

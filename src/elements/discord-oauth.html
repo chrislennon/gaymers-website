@@ -1,0 +1,189 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="./uri-js.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="discord-oauth">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <iron-localstorage 
+      id="localstorage"
+      name="gaymers-storage"
+      value="{{tokens}}"
+      on-iron-localstorage-load-empty="_initializeDefaultTokens"
+    ></iron-localstorage>
+
+    <iron-ajax
+      id="refresh-tokens"
+      method="GET"
+      handle-as="json"
+      on-response="_refreshTokensResponse"
+    ></iron-ajax>
+
+    <iron-ajax
+      id="get-profile-data"
+      method="GET"
+      handle-as="json"
+      on-response="_getProfileDataResponse"
+      on-error="_getProfileDataError"
+    ></iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'discord-oauth',
+
+      properties: {
+        /**
+          * The base URL for API requests
+          */
+        baseUrl: {
+          type: String,
+          value: 'https://api.gaymers.gg',
+        },
+
+        /**
+          * Token object synced to localstorage.
+          */
+        tokens: {
+          type: Object
+        },
+
+        /**
+          * If the user is signed in.
+          */
+        signedIn: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true,
+          notify: true,
+        },
+
+        /**
+          * The returned user object
+          */
+        user: {
+          type: Object,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_computeAvatarUrl'
+        },
+      },
+
+      /**
+        * Attached event checkes for any URL parameters to see if we've been
+        * redirected from an OAuth flow.
+        */
+      attached: function() {
+        console.log('Tokens', this.tokens);
+
+        // Attempt a sign in
+        if (this.tokens.auth) {
+          this.signedIn = true;
+          this._getProfileData();
+        }
+        this._getURLParams();
+      },
+
+      /**
+        * Initialises a set of default token keys if none found in localstorage.
+        */
+      _initializeDefaultTokens: function() {
+        this.tokens = {
+          auth: '',
+          refresh: ''
+        }
+      },
+
+      /**
+        * Clears tokens and signs out the user.
+        */
+      signOut: function() {
+        this._initializeDefaultTokens(); // Clear tokens
+        this.signedIn = false;
+      },
+
+      /**
+        * Gets URL params
+        */
+      _getURLParams: function() {
+        var url = new URI;
+
+        if (!url.query()) {
+          console.log('No params');
+          return;
+        }
+
+        var params = url.search(true);
+
+        if (params.authorization_token && params.refresh_token) {
+          this._saveTokens(params.authorization_token, params.refresh_token);
+          this.signedIn = true;
+        }
+      },
+
+      /**
+        * Saves tokens to local storage.
+        *
+        * @param {string} authToken The Discord auth token
+        * @param {string} refreshToken The Discord refresh token
+        */
+      _saveTokens: function(authToken, refreshToken) {
+        this.set('tokens.auth', authToken);
+        this.set('tokens.refresh', refreshToken);
+      },
+
+      /**
+        * Refreshes an expired auth token.
+        */
+      _refreshTokens: function() {
+        console.log('Refreshing token.');
+
+        var ajax = this.$['refresh-tokens'];
+        ajax.url = this.baseUrl + '/authentication/refresh/' + this.tokens.refresh;
+        ajax.generateRequest();
+      },
+
+      _refreshTokensResponse: function(e) {
+        this._saveTokens(e.detail.response.authorization_token, e.detail.response.refresh_token);
+      },
+
+      /**
+        * Gets a user's profile data.
+        */
+      _getProfileData: function() {
+        console.log('Getting profile data.');
+
+        var ajax = this.$['get-profile-data'];
+        ajax.url = this.baseUrl + '/user';
+        ajax.headers['Authorization'] = this.tokens.auth;
+        ajax.generateRequest();
+      },
+
+      _getProfileDataResponse: function(e) {
+        console.log(e.detail.request);
+        this.user = e.detail.response;
+        console.log(this.user);
+      },
+
+      _getProfileDataError: function(e) {
+        console.log('Error getting data.');
+        this._refreshTokens();
+        this._getProfileData();
+      },
+
+      _computeAvatarUrl: function(user) {
+        if (user.avatar) {
+          console.log(user.avatar);
+          this.user.avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.userid + '/' + user.avatar + '.jpg';
+          console.log(user.avatarUrl);
+        }
+      }
+    });
+  </script>
+</dom-module>

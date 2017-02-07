@@ -1,5 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../shared-styles.html">
 
 <dom-module id="gaymers-navigation">
@@ -8,11 +8,23 @@
       :host {
         display: block;
         height: 90px;
+        width: 100%;
         color: #FFFFFF;
-        background-color: #081025;
       }
 
-      #container {
+      @media (max-width: 900px) {
+        :host {
+          width: 0;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 10;
+        }
+      }
+
+      :host #container {
+        position: relative;
+        z-index: 15;
         height: 100%;
         width: 100%;
         max-width: 900px;
@@ -21,74 +33,192 @@
         flex-flow: row nowrap;
         justify-content: flex-start;
         align-items: center;
+        background-color: #081025;
       }
 
-      #nav {
+      @media (max-width: 900px) {
+        :host #container {
+          position: absolute;
+          flex-flow: column nowrap;
+          height: 100vh;
+          width: 300px;
+          top: 0;
+          left: 0;
+          transform: translateX(-300px);
+          transition: transform 150ms ease-out;
+        }
+
+        :host([open]) #container {
+          transform: translateX(0px);
+        }
+      }
+
+      #brand {
+        padding: 5px 0px;
+        margin-right: 35px;
+        color: #FFFFFF;
+        font-size: 24px;
+        text-transform: uppercase;
+        font-weight: bold;
+        border-bottom: none;
+        text-decoration: none;
+      }
+
+      nav {
         display: flex;
         flex-flow: row nowrap;
         justify-content: center;
         align-items: center;
       }
 
-      #nav a {
+      @media (max-width: 900px) {
+        nav {
+          width: 100%;
+          flex-flow: column nowrap;
+          justify-content: flex-start;
+          align-items: flex-start;
+          box-sizing: border-box;
+          padding: 25px;
+        }
+      }
+
+      nav a {
         padding: 5px 0px;
-        margin-right: 35px;
+        margin-right: 30px;
         font-size: 14px;
         color: #FFFFFF;
         text-decoration: none;
         border-bottom: 1px solid transparent;
       }
-
-      #nav a:hover {
+      
+      nav a:hover {
+        color: #FFFFFF;
         border-bottom: 1px solid #FFF;
       }
 
-      #nav #brand {
+      @media (max-width: 900px) {
+        nav a {
+          margin-right: 0px;
+          width: 100%;
+          padding: 25px 0;
+          border-bottom: none;
+        }
+
+        nav a:hover {
+          border-bottom: none;
+        }
+      }
+
+
+      nav #brand {
+        display: none;
+        color: #FFFFFF;
         font-size: 24px;
         text-transform: uppercase;
         font-weight: bold;
         border-bottom: none;
+        text-decoration: none;
       }
 
-      #nav #brand:hover {
+      @media (max-width: 900px) {
+        nav #brand {
+          display: block;
+        }
+      }
+
+      #right-container {
+        margin-left: auto;
+      }
+
+      #sign-in-button {
+        position: relative;
+        box-sizing: border-box;
+        padding: 10px 15px;
+        background-color: var(--gaymers-secondary);
+        color: #FFFFFF;
+        text-align: center;
+        text-decoration: none;
+        border-bottom: none;
+        transition: all ease-out 150ms;
+      }
+
+      #sign-in-button:hover {
+        background-color: var(--gaymers-secondary-dark);
+      }
+
+      @media (max-width: 900px) {
+        #sign-in-button {
+          display: block;
+          margin-top: auto;
+          margin-right: 30px;
+          margin-bottom: 30px;
+          margin-left: 30px;
+          width: calc(100% - 60px);
+        }
+      }
+
+      #profile-link {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        align-items: center;
+        text-decoration: none;
+        color: #FFF;
         border-bottom: none;
       }
 
-      #online {
-        margin-left: auto;
-        font-size: 14px;
-        font-weight: normal;
-        color: rgba(255, 255, 255, 1);
+      #profile-link iron-image {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-left: 10px;
+        background-color: var(--gaymers-primary-dark);
       }
 
-      #online-icon {
-        display: inline-block;
-        height: 6px;
-        width: 6px;
-        margin-bottom: 2px;
-        border-radius: 50%;
-        background-color: #7ED321;
+      :host #scrim {
+        opacity: 0;
+        transition: opacity 150ms ease-out;
+      }
+
+      @media (max-width: 900px) {
+        :host([open]) #scrim {
+          display: block;
+          width: 100vw;
+          height: 100vh;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 10;
+          background-color: #000000;
+          opacity: 0.7;
+        }
       }
     </style>
 
     <div id="container">
-      <iron-selector id="nav" selected="[[page]]" attr-for-selected="name" role="navigation">
-        <a name="home" href="/" id="brand">GAYMERS</a>
+      <nav role="navigation">
+        <a name="home" href="/" id="brand" on-tap="closeDrawer">GAYMERS</a>
+        <a name="events" href="/events" on-tap="closeDrawer">Events</a>
+        <a id="join" href$="{{invite}}" target="_blank" on-tap="closeDrawer">Join Us</a>
+      </nav>
 
-        <a name="events" href="/events">Events</a>
-        <a name="streams" href="/streams">Streams</a>
-        <a name="about-us" href="/about-us">About Us</a>
-        <a name="about-us" id="join" href$="{{invite}}" target="_blank" >Join Us</a>
-      </iron-selector>
+      <div id="right-container">
+        <template is="dom-if" if="[[!signedIn]]">
+          <a id="sign-in-button" href="https://api.gaymers.gg/authentication/signin/discord">Sign In</a>
+        </template>
 
-      <template is="dom-if" if="{{numberOnline}}">
-        <span id="online">
-          <div id="online-icon"></div>
-          {{numberOnline}} online now
-        </span>
-      </template>
+        <template is="dom-if" if="[[user.username]]">
+          <a href="/user" id="profile-link">
+            <span>Hello, [[user.username]]</span>
+            <iron-image sizing="cover" src="[[user.avatarUrl]]" preload></iron-image>
+          </a>
+        </template>
+      </div>
     </div>
-    
+
+    <div id="scrim" on-tap="closeDrawer"></div>
   </template>
 
   <script>
@@ -96,20 +226,25 @@
       is: 'gaymers-navigation',
 
       properties: {
-        selected: {
-          type: String
-        },
-
         invite: {
           type: String,
           value: 'https://discord.gg/Mb7ab33'
         },
-
-        numberOnline: {
-          type: String,
-          value: null,
-          notify: true
+        
+        open: {
+          type: Boolean,
+          reflectToAttribute: true,
+          value: false
         },
+
+        user: {
+          type: Object,
+          notify: true,
+        }
+      },
+
+      closeDrawer: function() {
+        this.open = false;
       },
     });
   </script>

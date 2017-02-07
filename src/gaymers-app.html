@@ -5,8 +5,9 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="./shared-styles.html">
-<link rel="import" href="./elements/gaymers-navigation.html">
+<link rel="import" href="./elements/gaymers-header.html">
 <link rel="import" href="./elements/gaymers-footer.html">
+<link rel="import" href="./elements/discord-oauth.html">
 
 <dom-module id="gaymers-app">
   <template>
@@ -28,6 +29,11 @@
       }
     </style>
 
+    <discord-oauth
+      signed-in="{{signedIn}}"
+      user="{{user}}"
+    ></discord-oauth>
+
     <iron-ajax id="events-request"
       auto
       url="https://api.gaymers.gg/events"
@@ -47,27 +53,38 @@
         data="{{routeData}}"></app-route>
 
     <div id="content">
-      <gaymers-navigation 
-        selected="[[page]]"
-        number-online="{{numberOnline}}"
+      <gaymers-header 
+        signed-in="[[signedIn]]"
+        user="[[user]]"
         invite="{{discord.instant_invite}}"
-        role="navigation"></gaymers-navigation>
+      ></gaymers-header>
         
       <iron-pages
           selected="[[page]]"
           attr-for-selected="name"
           fallback-selection="404"
-          role="main">
+          role="main"
+      >
         <gaymers-home 
           name="home" 
           invite="{{discord.instant_invite}}" 
-          events="{{upcomingEvents}}"></gaymers-home>
+          members="{{discord.members}}"
+          events="{{upcomingEvents}}"
+        ></gaymers-home>
+
         <gaymers-events
           name="events" 
           previous-events="{{previousEvents}}"
-          upcoming-events="{{upcomingEvents}}"></gaymers-events>
+          upcoming-events="{{upcomingEvents}}"
+        ></gaymers-events>
+
+        <gaymers-user
+          name="user" 
+        ></gaymers-user>
+
         <gaymers-404
-          name="404"></gaymers-404>
+          name="404"
+        ></gaymers-404>
       </iron-pages>
     </div>
 
@@ -90,11 +107,6 @@
           notify: true,
         },
 
-        numberOnline: {
-          type: String,
-          notify: true
-        },
-
         events: {
           type: Object,
           notify: true,
@@ -113,7 +125,6 @@
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_countOnline(discord.members)',
         '_generatePreviousEvents(events.events)',
         '_generateUpcomingEvents(events.events)',
       ],
@@ -130,10 +141,6 @@
 
       _showPage404: function() {
         this.page = '404';
-      },
-
-      _countOnline: function(members) {
-        this.numberOnline = members.length;
       },
 
       _generatePreviousEvents: function(events) {

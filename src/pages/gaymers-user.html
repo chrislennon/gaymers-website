@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 
-<dom-module id="gaymers-404">
+<dom-module id="gaymers-user">
   <template>
     <style include="shared-styles">
       :host {
@@ -22,24 +22,36 @@
       }
 
       h1 {
-        font-size: 144px;
+        font-size: 90px;
         margin-bottom: 0;
+        text-align: center;
+      }
+
+      h3 {
+
       }
 
       a {
         color: #FFF;
+        border-color: transparent;
+      }
+
+      a:hover {
+        color: #FFF;
+        border-color: #FFF;
       }
     </style>
 
     <section>
-      <h1>404 🙈</h1>
+      <h1>Under Construction😳</h1>
+      <h3>Sorry about that...</h3>
       <a href="/">Go back home.</a>
     </section>
   </template>
 
   <script>
     Polymer({
-      is: 'gaymers-404',
+      is: 'gaymers-user',
     });
   </script>
 </dom-module>

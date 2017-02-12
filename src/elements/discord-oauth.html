@@ -80,7 +80,7 @@
         * redirected from an OAuth flow.
         */
       attached: function() {
-        console.log('Tokens', this.tokens);
+        console.log('Attempting to sign in.');
 
         // Attempt a sign in
         if (this.tokens.auth) {
@@ -115,7 +115,7 @@
         var url = new URI;
 
         if (!url.query()) {
-          console.log('No params');
+          console.log('No URL params detected.');
           return;
         }
 
@@ -166,9 +166,7 @@
       },
 
       _getProfileDataResponse: function(e) {
-        console.log(e.detail.request);
         this.user = e.detail.response;
-        console.log(this.user);
       },
 
       _getProfileDataError: function(e) {
@@ -179,9 +177,7 @@
 
       _computeAvatarUrl: function(user) {
         if (user.avatar) {
-          console.log(user.avatar);
           this.user.avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.userid + '/' + user.avatar + '.jpg';
-          console.log(user.avatarUrl);
         }
       }
     });

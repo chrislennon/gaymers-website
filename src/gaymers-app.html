@@ -108,7 +108,7 @@
         },
 
         events: {
-          type: Object,
+          type: Array,
           notify: true,
         },
 
@@ -125,8 +125,8 @@
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_generatePreviousEvents(events.events)',
-        '_generateUpcomingEvents(events.events)',
+        '_generatePreviousEvents(events)',
+        '_generateUpcomingEvents(events)',
       ],
 
       _routePageChanged: function(page) {
@@ -144,6 +144,7 @@
       },
 
       _generatePreviousEvents: function(events) {
+        console.log('Events', events);
         if (!events) {
           this.previousEvents = null;
           return;

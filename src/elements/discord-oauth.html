@@ -75,13 +75,15 @@
         },
       },
 
+      listeners: {
+        'joinEvent': '_joinEvent'
+      },
+
       /**
         * Attached event checkes for any URL parameters to see if we've been
         * redirected from an OAuth flow.
         */
       attached: function() {
-        console.log('Tokens', this.tokens);
-
         // Attempt a sign in
         if (this.tokens.auth) {
           this.signedIn = true;
@@ -115,7 +117,7 @@
         var url = new URI;
 
         if (!url.query()) {
-          console.log('No params');
+          console.log('No URL params detected.');
           return;
         }
 
@@ -166,7 +168,6 @@
       },
 
       _getProfileDataResponse: function(e) {
-        console.log(e.detail.request);
         this.user = e.detail.response;
         console.log(this.user);
       },
@@ -179,10 +180,12 @@
 
       _computeAvatarUrl: function(user) {
         if (user.avatar) {
-          console.log(user.avatar);
           this.user.avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.userid + '/' + user.avatar + '.jpg';
-          console.log(user.avatarUrl);
         }
+      },
+
+      _joinEvent: function(event) {
+        console.log('EVENTID', event.eventId);
       }
     });
   </script>

@@ -49,21 +49,31 @@
       }
     </style>
 
-    <template is="dom-if" if="{{image}}">
-      <iron-image src="{{imageUrl}}" sizing="cover" preload fade></iron-image>
+    <template is="dom-if" if="{{event.image}}">
+      <iron-image src="{{_calculateImageUrl(event.image)}}" sizing="cover" preload fade></iron-image>
     </template>
 
-    <h3>{{title}}</h3>
+    <h3>{{event.title}}</h3>
 
     <div id="times">
-      <span id="start-time">{{startString}}</span>
+      <span id="start-time">{{_calculateTimeWithTimezone(event.start)}}</span>
       <span id="separator"> - </span>
-      <span id="end-time">{{endString}}</span>
+      <span id="end-time">{{_calculateTimeWithTimezone(event.end)}}</span>
     </div>
 
-    <template is="dom-if" if="{{description}}">
-      <template is="dom-repeat" items="{{formattedDescription}}">
+    <template is="dom-if" if="{{event.description}}">
+      <template is="dom-repeat" items="{{_splitDescription(event.description)}}">
         <p>{{item}}</p>
+      </template>
+    </template>
+
+    <template is="dom-if" if="[[signedIn]]">
+      <template is="dom-if" if="[[attending]]">
+        <button on-tap="joinEvent">Join</button>
+      </template>
+
+      <template is="dom-if" if="[[!attending]]">
+        You're not attending!
       </template>
     </template>
   </template>
@@ -73,30 +83,17 @@
       is: 'gaymers-event-card',
 
       properties: {
-        title: {
-          type: String,
+        event: {
+          type: Object,
+        },
+
+        user: {
+          type: Object,
         },
 
         timezone: {
           type: String,
-          observer: '_calculateTimes',
-          reflectToAttribute: true,
-        },
-
-        start: {
-          type: String,
-        },
-
-        startString: {
-          type: String,
-        },
-
-        end: {
-          type: String,
-        },
-
-        endString: {
-          type: String,
+          value: moment.tz.guess()
         },
 
         description: {
@@ -104,43 +101,22 @@
           observer: '_splitDescription',
         },
 
-        formattedDescription: {
-          type: Array,
-        },
-
-        image: {
-          type: String,
-          observer: '_generateImageUrl'
-        },
-
-        imageUrl: {
-          type: String,
+        attending: {
+          type: Boolean,
+          computed: '_computeAttending(event.attendees, user.userid)' 
         },
       },
 
-      ready: function() {
-        this.timezone = moment.tz.guess();
+      _calculateTimeWithTimezone: function(time) {
+        return moment(time).tz(this.timezone).format('ddd MMM Do, ha z');
       },
 
-      _generateImageUrl: function(image) {
-        return image;
+      _calculateImageUrl: function(image) {
+        return '' + image;
       },
 
-      _calculateTimes: function() {
-        this._generateStartTime();
-        this._generateEndTime();
-      },
-
-      _generateStartTime: function() {
-        this.startString = moment(this.start).tz(this.timezone).format('ddd MMM Do, ha z');
-      },
-
-      _generateEndTime: function() {
-        this.endString = moment(this.end).tz(this.timezone).format('ddd MMM Do, ha z');
-      },
-
-      _splitDescription: function() {
-        var array = this.description.split('\n');
+      _splitDescription: function(description) {
+        var array = description.split('\n');
 
         for(i = 0; i < array.length; i++) {
           // Removes double returns
@@ -150,7 +126,32 @@
           }
         }
 
-        this.formattedDescription = array;
+        return array;
+      },
+
+      _computeAttending: function(attendees, userid) {
+        if (!attendees) {
+          return false;
+        }
+
+        if (!userid) {
+          return false;
+        }
+
+        array = JSON.parse(attendees);
+
+        for (var i = 0; i < array.length; i++) {
+          if (array[i].userid === userid) {
+            return true;
+          }
+        }
+
+        return false;
+      },
+
+      joinEvent: function() {
+        console.log('Joining Event');
+        this.fire('joinEvent', { eventId: this.event.id });
       },
     });
   </script>

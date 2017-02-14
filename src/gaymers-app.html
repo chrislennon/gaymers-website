@@ -70,16 +70,22 @@
           invite="{{discord.instant_invite}}" 
           members="{{discord.members}}"
           events="{{upcomingEvents}}"
+          signed-in="[[signedIn]]"
+          user="[[user]]"
         ></gaymers-home>
 
         <gaymers-events
           name="events" 
           previous-events="{{previousEvents}}"
           upcoming-events="{{upcomingEvents}}"
+          signed-in="[[signedIn]]"
+          user="[[user]]"
         ></gaymers-events>
 
         <gaymers-user
-          name="user" 
+          name="user"
+          signed-in="[[signedIn]]"
+          user="[[user]]"
         ></gaymers-user>
 
         <gaymers-404

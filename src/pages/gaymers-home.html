@@ -23,7 +23,9 @@
     
     <template is="dom-if" if="!{{events}}">
       <gaymers-events-section 
-        upcoming-events="{{events}}"></gaymers-events-section>
+        upcoming-events="{{events}}"
+        signed-in="[[signedIn]]"
+        user="[[user]]"></gaymers-events-section>
     </template>
   </template>
 

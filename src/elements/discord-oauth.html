@@ -2,6 +2,7 @@
 <link rel="import" href="./uri-js.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
 
 <dom-module id="discord-oauth">
   <template>
@@ -19,19 +20,40 @@
     ></iron-localstorage>
 
     <iron-ajax
-      id="refresh-tokens"
+      id="ajax-refresh-tokens"
       method="GET"
       handle-as="json"
       on-response="_refreshTokensResponse"
     ></iron-ajax>
 
     <iron-ajax
-      id="get-profile-data"
+      id="ajax-get-profile-data"
       method="GET"
       handle-as="json"
       on-response="_getProfileDataResponse"
       on-error="_getProfileDataError"
     ></iron-ajax>
+
+    <iron-ajax
+      id="ajax-join-event"
+      method="POST"
+      handle-as="json"
+      on-response="_eventResponse"
+      on-error="_joinEventError"
+    ></iron-ajax>
+
+    <iron-ajax
+      id="ajax-leave-event"
+      method="POST"
+      handle-as="json"
+      on-response="_eventResponse"
+      on-error="_leaveEventError"
+    ></iron-ajax>
+
+    <iron-signals
+      on-iron-signal-join-event="_joinEvent"
+      on-iron-signal-leave-event="_leaveEvent"
+    ></iron-signals>
   </template>
 
   <script>
@@ -146,7 +168,7 @@
       _refreshTokens: function() {
         console.log('Refreshing token.');
 
-        var ajax = this.$['refresh-tokens'];
+        var ajax = this.$['ajax-refresh-tokens'];
         ajax.url = this.baseUrl + '/authentication/refresh/' + this.tokens.refresh;
         ajax.generateRequest();
       },
@@ -161,7 +183,7 @@
       _getProfileData: function() {
         console.log('Getting profile data.');
 
-        var ajax = this.$['get-profile-data'];
+        var ajax = this.$['ajax-get-profile-data'];
         ajax.url = this.baseUrl + '/user';
         ajax.headers['Authorization'] = this.tokens.auth;
         ajax.generateRequest();
@@ -184,9 +206,40 @@
         }
       },
 
+      /* Events */
+
       _joinEvent: function(event) {
-        console.log('EVENTID', event.eventId);
-      }
+        console.log('Joining event', event.detail);
+
+        var ajax = this.$['ajax-join-event'];
+        ajax.url = this.baseUrl + '/events/' + event.detail + '/join';
+        ajax.headers['Authorization'] = this.tokens.auth;
+        ajax.generateRequest();
+      },
+
+      _eventResponse: function(e) {
+        console.log('Event operation completed', e);
+        this.fire('iron-signal', { name: 'update-events' });
+      },
+
+      _joinEventError: function(e) {
+        console.log('Error joining event', e);
+        this.fire('iron-signal', { name: 'update-events' });
+      },
+
+      _leaveEvent: function(event) {
+        console.log('Leaving event', event.detail);
+
+        var ajax = this.$['ajax-leave-event'];
+        ajax.url = this.baseUrl + '/events/' + event.detail + '/leave';
+        ajax.headers['Authorization'] = this.tokens.auth;
+        ajax.generateRequest();
+      },
+
+      _leaveEventError: function(e) {
+        console.log('Error leaving event', e);
+        this.fire('iron-signal', { name: 'update-events' });
+      },
     });
   </script>
 </dom-module>

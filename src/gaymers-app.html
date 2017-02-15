@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./elements/gaymers-header.html">
@@ -34,23 +35,31 @@
       user="{{user}}"
     ></discord-oauth>
 
-    <iron-ajax id="events-request"
+    <iron-ajax
+      id="events-request"
       auto
       url="https://api.gaymers.gg/events"
       handle-as="json"
-      last-response="{{events}}"></iron-ajax>
+      last-response="{{events}}"
+    ></iron-ajax>
 
     <iron-ajax id="discord-request"
       auto
       url="https://discordapp.com/api/guilds/123315443208421377/widget.json"
       handle-as="json"
-      last-response="{{discord}}"></iron-ajax>
+      last-response="{{discord}}"
+    ></iron-ajax>
+
+    <iron-signals
+      on-iron-signal-update-events="_updateEvents"
+    ></iron-signals>
 
     <app-location route="{{route}}"></app-location>
     <app-route
-        route="{{route}}"
-        pattern="/:page"
-        data="{{routeData}}"></app-route>
+      route="{{route}}"
+      pattern="/:page"
+      data="{{routeData}}"
+    ></app-route>
 
     <div id="content">
       <gaymers-header 
@@ -63,23 +72,28 @@
           selected="[[page]]"
           attr-for-selected="name"
           fallback-selection="404"
-          role="main"
-      >
+          role="main">
         <gaymers-home 
           name="home" 
           invite="{{discord.instant_invite}}" 
           members="{{discord.members}}"
           events="{{upcomingEvents}}"
+          signed-in="[[signedIn]]"
+          user="[[user]]"
         ></gaymers-home>
 
         <gaymers-events
           name="events" 
           previous-events="{{previousEvents}}"
           upcoming-events="{{upcomingEvents}}"
+          signed-in="[[signedIn]]"
+          user="[[user]]"
         ></gaymers-events>
 
         <gaymers-user
-          name="user" 
+          name="user"
+          signed-in="[[signedIn]]"
+          user="[[user]]"
         ></gaymers-user>
 
         <gaymers-404
@@ -108,7 +122,7 @@
         },
 
         events: {
-          type: Object,
+          type: Array,
           notify: true,
         },
 
@@ -125,8 +139,8 @@
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_generatePreviousEvents(events.events)',
-        '_generateUpcomingEvents(events.events)',
+        '_generatePreviousEvents(events)',
+        '_generateUpcomingEvents(events)',
       ],
 
       _routePageChanged: function(page) {
@@ -143,7 +157,12 @@
         this.page = '404';
       },
 
+      _updateEvents: function() {
+        this.$['events-request'].generateRequest();
+      },
+
       _generatePreviousEvents: function(events) {
+        console.log('Events', events);
         if (!events) {
           this.previousEvents = null;
           return;

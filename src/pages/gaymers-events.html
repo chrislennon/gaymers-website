@@ -14,7 +14,7 @@
         padding: 10px;
       }
 
-      h2 {
+      h1 {
         text-align: center;
       }
 
@@ -57,16 +57,16 @@
       }
     </style>
 
-    <h2>Upcoming Events</h2>
+    <h1>Upcoming Events</h1>
 
     <div class="events-container">
       <template is="dom-if" if="{{_checkArrayLength(upcomingEvents)}}">
         <template is="dom-repeat" items="{{upcomingEvents}}" as="event" sort="_sortEvents">
           <gaymers-event-card
-            title="{{event.title}}"
-            start="{{event.start}}"
-            end="{{event.end}}"
-            description="{{event.description}}"></gaymers-event-card>
+            event="[[event]]"
+            signed-in="[[signedIn]]"
+            user="[[user]]"
+          ></gaymers-event-card>
         </template>
       </template>
 
@@ -76,14 +76,13 @@
     </div>
 
     <template is="dom-if" if="{{_checkArrayLength(previousEvents)}}">
-      <h2>Previous Events</h2>
+      <h1>Previous Events</h1>
       <div class="events-container">
         <template is="dom-repeat" items="{{previousEvents}}" as="event" sort="_sortEvents">
           <gaymers-event-card
-            title="{{event.title}}"
-            start="{{event.start}}"
-            end="{{event.end}}"
-            description="{{event.description}}"></gaymers-event-card>
+            event="[[event]]"
+            signed-in="false"
+          ></gaymers-event-card>
         </template>
       </div>
     </template>

@@ -65,10 +65,9 @@
       <template is="dom-if" if="{{_checkArrayLength(upcomingEvents)}}">
         <template is="dom-repeat" items="{{upcomingEvents}}" as="event" sort="_sortEvents">
           <gaymers-event-card
-            title="{{event.title}}"
-            start="{{event.start}}"
-            end="{{event.end}}"
-            description="{{event.description}}"></gaymers-event-card>
+            event="[[event]]"
+            signed-in="[[signedIn]]"
+            user="[[user]]"></gaymers-event-card>
         </template>
       </template>
 

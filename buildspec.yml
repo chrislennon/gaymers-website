@@ -1,0 +1,19 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - echo Installing base components...
+      - gem install bundler
+  pre_build:
+    commands:
+      - echo Installing jekyll + dependancies ...
+      - bundle install
+  build:
+    commands:
+      - echo Building function - `date`
+      - jekyll build --destination dist/
+  post_build:
+    commands:
+      - echo Deplying to s3 - `date`
+      - aws s3 sync dist s3://$S3_BUCKET_NAME --delete --cache-control max-age=3600

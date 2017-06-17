@@ -5,3 +5,12 @@
 _site
 .sass-cache
 .jekyll-metadata
+
+# Bower
+/vendor/
+
+# Ruby
+Gem.lock
+
+# Builds
+dist/*

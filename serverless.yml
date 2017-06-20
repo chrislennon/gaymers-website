@@ -14,7 +14,10 @@ custom: # Specific stack setup info
   domain: gaymers.gg
   subdomain: test.
   certificateARN: arn:aws:acm:us-east-1:102058593971:certificate/24324c85-e569-445e-ab23-71bdd1c5a94b # ACM Certificate created outside of this flow
-  OAILambda: arn:aws:lambda:eu-west-1:102058593971:function:cloudformation-cloudfront-oai-prod-get_oai
+  OAILambda: arn:aws:lambda:eu-west-1:102058593971:function:cloudformation-cloudfront-oai-prod-get_oai # Tutorial & explanation of necessity https://blog.h4.nz/2017/01/20/a-cloudformation-custom-resource-for-cloudfront-origin-access-identities-oai/
+  CloudFrontHostedZoneId: Z2FDTNDATAQYW2 # Statically defined CloudFront hosted zone id http://docs.aws.amazon.com/general/latest/gr/rande.html#cf_region
+  S3HostedZoneId: Z1BKCTXD74EZPE  # Statically defined S3 hosted zone id http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+  S3WebsiteEndPoint: s3-website-eu-west-1.amazonaws.com # Statically defined S3 website endpoint http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
 
 resources:
   Resources:
@@ -84,17 +87,18 @@ resources:
         AliasTarget: 
           DNSName:
             Fn::GetAtt: [ WebsiteCloudFrontDistribution, DomainName ]
-          HostedZoneId: Z2FDTNDATAQYW2 # Statically defined CloudFront hosted zone id http://docs.aws.amazon.com/general/latest/gr/rande.html#cf_region
+          HostedZoneId: ${self:custom.CloudFrontHostedZoneId}
         HostedZoneName: ${self:custom.domain}.
         Name: '${self:custom.subdomain}${self:custom.domain}.'
         Type: A
 
     RedirectRoute53Entry: # Adds Route53 records
       Type: AWS::Route53::RecordSet
+      DependsOn: RedirectS3Bucket
       Properties:
         AliasTarget: 
-          DNSName:
-            Fn::GetAtt: [ WebsiteS3Bucket, DomainName ]
+          DNSName: ${self:custom.S3WebsiteEndPoint}
+          HostedZoneId: ${self:custom.S3HostedZoneId}
         HostedZoneName: ${self:custom.domain}.
         Name: 'www.${self:custom.subdomain}${self:custom.domain}.'
         Type: A

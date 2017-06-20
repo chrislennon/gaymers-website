@@ -1,0 +1,148 @@
+service: gaymers-website-test
+
+provider: # Global setup info
+  name: aws
+  runtime: nodejs6.10
+  stage: production
+  region: eu-west-1
+
+package:
+  exclude:
+    - .git/**
+
+custom: # Specific stack setup info
+  domain: gaymers.gg
+  subdomain: test.
+  certificateARN: arn:aws:acm:us-east-1:102058593971:certificate/24324c85-e569-445e-ab23-71bdd1c5a94b # ACM Certificate created outside of this flow
+  OAILambda: arn:aws:lambda:eu-west-1:102058593971:function:cloudformation-cloudfront-oai-prod-get_oai
+
+resources:
+  Resources:
+    ## Custom OriginAccessIdentity - A mechanism to force access via cloudfront
+    WebsiteOAI:
+      Type: Custom::WebsiteOAI
+      Properties:
+        ServiceToken: ${self:custom.OAILambda}
+        Region: ${self:provider.region}
+        OAIName: ${self:service}
+
+    ## Specifying the S3 Bucket
+    WebsiteS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.subdomain}${self:custom.domain}
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: index.html
+
+    ## Specifying the S3 www forwarding Bucket
+    RedirectS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: www.${self:custom.subdomain}${self:custom.domain}
+        WebsiteConfiguration:
+          RedirectAllRequestsTo:
+            HostName: gaymers.gg
+            Protocol: https
+
+    ## Specifying the policies to make sure all files inside the Bucket are avaialble to CloudFront
+    WebsiteS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: WebsiteS3Bucket
+        PolicyDocument:
+          Statement:
+            - Sid: PolicyForCloudFrontPrivateContent
+              Effect: Allow
+              Principal: 
+                AWS: { Fn::Join: [ "", ["arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ", { "Fn::GetAtt": [ "WebsiteOAI", "OriginAccessIdentity" ] } ]] }
+              Action:
+              - s3:GetObject
+              Resource: arn:aws:s3:::${self:custom.subdomain}${self:custom.domain}/*
+
+    ## Specifying the policies to the www redirect bucket
+    RedirectS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: RedirectS3Bucket
+        PolicyDocument:
+          Statement:
+            - Sid: PolicyForCloudFrontPrivateContent
+              Effect: Allow
+              Principal: "*"
+              Action:
+              - s3:GetObject
+              Resource: arn:aws:s3:::www.${self:custom.subdomain}${self:custom.domain}/*
+
+    ## CloudFront Route53 record
+    WebsiteRoute53Entry:
+      Type: AWS::Route53::RecordSet
+      Properties:
+        AliasTarget: 
+          DNSName:
+            Fn::GetAtt: [ WebsiteCloudFrontDistribution, DomainName ]
+          HostedZoneId: Z2FDTNDATAQYW2 # Statically defined CloudFront hosted zone id http://docs.aws.amazon.com/general/latest/gr/rande.html#cf_region
+        HostedZoneName: ${self:custom.domain}.
+        Name: '${self:custom.subdomain}${self:custom.domain}.'
+        Type: A
+
+    RedirectRoute53Entry: # Adds Route53 records
+      Type: AWS::Route53::RecordSet
+      Properties:
+        AliasTarget: 
+          DNSName:
+            Fn::GetAtt: [ WebsiteS3Bucket, DomainName ]
+        HostedZoneName: ${self:custom.domain}.
+        Name: 'www.${self:custom.subdomain}${self:custom.domain}.'
+        Type: A
+
+
+    WebsiteCloudFrontDistribution: # Adds CloudFront endpoint for the API Gateway domain
+      Type: AWS::CloudFront::Distribution
+      DependsOn: WebsiteS3Bucket
+      Properties:
+        DistributionConfig:
+          Aliases: ['${self:custom.subdomain}${self:custom.domain}']
+          Comment: ${self:service}
+          Origins:
+            - DomainName:
+                Fn::GetAtt: [ WebsiteS3Bucket, DomainName ]
+              ## An identifier for the origin which must be unique within the distribution
+              Id: Website
+              S3OriginConfig: 
+                OriginAccessIdentity: 
+                  Fn::Join: [ "/", [ "origin-access-identity/cloudfront", Fn::GetAtt: [ WebsiteOAI, OriginAccessIdentity ] ] ]
+          Enabled: 'true'
+          DefaultRootObject: index.html
+          HttpVersion: 'http2'
+          #IsIPV6Enabled: 'true' ## https://forums.aws.amazon.com/thread.jspa?messageID=751582
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - GET
+              - HEAD
+            DefaultTTL: 0
+            MaxTTL: 0
+            MinTTL: 0
+            TargetOriginId: Website
+            ForwardedValues:
+              QueryString: 'false'
+              Cookies:
+                Forward: none
+            ViewerProtocolPolicy: redirect-to-https
+          ViewerCertificate:
+            AcmCertificateArn: ${self:custom.certificateARN}
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1
+
+    CloudFormationLogs:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        RetentionInDays: "3"
+
+  Outputs:
+    WebsiteCloudFrontDistributionOutput:
+      Value:
+        'Fn::GetAtt': [ WebsiteCloudFrontDistribution, DomainName ]

@@ -14,3 +14,6 @@ Gem.lock
 
 # Builds
 dist/*
+
+# serverless
+.serverless/*
